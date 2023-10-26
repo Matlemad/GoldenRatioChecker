@@ -6,4 +6,4 @@ the closer the ratio to the Ratio, the closer the score to 0, and viceversa.
 
 ... just in case someone out there is interested in experimenting with esoteric DeFi.
 
-I'm open to suggestions and improvements :namaste: 
+I'm open to suggestions and improvements
