@@ -8,22 +8,25 @@ interface IERC20 {
 
 contract GoldenRatioChecker {
 
-    // Define the constant for the Golden Ratio
-    uint256 private constant PHI_PRECISION = 10000;  // Using precision to 4 decimal places
-    uint256 private constant PHI_VALUE = 16180;  // Represents 1.6180 (Golden Ratio to 4 decimal places)
+    // Define the constant for the Golden Ratio with extended precision
+    uint256 private constant PHI_PRECISION = 100000000000;  // Using precision to 10 decimal places
+    uint256 private constant PHI_VALUE = 161803398875;  // Represents 1.61803398875 (Golden Ratio to 10 decimal places)
 
     // Mapping to store scores for each address
     mapping(address => uint256) public scores;
 
+    // Event to log the Golden Ratio check results
+    event GoldenRatioChecked(address indexed caller, uint256 deviation, uint256 totalScore);
+
     // Check the Golden Ratio balance between two given assets for a given address and update the score
-    function checkGoldenRatio(address caller, address assetOne, address assetTwo) external returns (uint256) {
+    function checkGoldenRatio(address caller, address assetOne, address assetTwo) external {
         // Fetch balances of the two assets for the given address
         uint256 balanceOne = IERC20(assetOne).balanceOf(caller);
         uint256 balanceTwo = IERC20(assetTwo).balanceOf(caller);
 
         require(balanceTwo != 0, "Asset2 balance should not be zero");  // Prevent division by zero
 
-        // Calculate the ratio with precision
+        // Calculate the ratio with extended precision
         uint256 currentRatio = (balanceOne * PHI_PRECISION) / balanceTwo;
 
         // Determine how far the current ratio is from the Golden Ratio
@@ -37,7 +40,7 @@ contract GoldenRatioChecker {
         // Add the deviation to the caller's score
         scores[caller] += deviation;
 
-        // Return the total score for the caller
-        return scores[caller];
+        // Emit the event with the caller's address, deviation, and total score
+        emit GoldenRatioChecked(caller, deviation, scores[caller]);
     }
 }
